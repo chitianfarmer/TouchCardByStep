@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import cn.xiaojiu.touchcardbystep.card.CardConfig;
 import cn.xiaojiu.touchcardbystep.card.CardViewAdapter;
 import cn.xiaojiu.touchcardbystep.card.SwipeCallback;
 import cn.xiaojiu.touchcardbystep.card.SwipeCardLayoutManager;
+import cn.xiaojiu.touchcardbystep.card.Utils;
 
 /**
  * 主页面
@@ -30,10 +33,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SwipeCallback swipeCallback;
     private List<JSONObject> objectList = new ArrayList<>();
     private ItemTouchHelper itemTouchHelper;
+    private ImageView iv_bg_up;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.immersive(this);
         setContentView(R.layout.activity_main);
         /*初始化卡片默认设置*/
         CardConfig.initConfig(this);
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         tv_start_app = (TextView) findViewById(R.id.tv_start_app);
+        iv_bg_up = (ImageView) findViewById(R.id.iv_bg_up);
     }
 
     private void initData() {
@@ -61,14 +67,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 objectList.add(object);
             }
         } catch (Exception e) {
-
         }
+        int width = Utils.getScreenWidth(this);
+        int bgUpHeight = width * 816 / 1080;
+        iv_bg_up.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, bgUpHeight));
         /*设置数据*/
         adapter = new CardViewAdapter(this, objectList);
         /*设置自定义*/
         SwipeCardLayoutManager swipeCardLayoutManager = new SwipeCardLayoutManager();
         /*绑定布局管理器*/
         recyclerView.setLayoutManager(swipeCardLayoutManager);
+        /*设置上成图片背景的高度*/
+//        swipeCardLayoutManager.setCarHeight(bgUpHeight);
         /*设置数据适配器*/
         recyclerView.setAdapter(adapter);
         /*获取自定义回调监听*/
